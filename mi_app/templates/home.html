@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio - Mi Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .logout {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+        }
+        h1, .nav-links {
+            text-align: left;
+            margin-left: 20px;
+        }
+        .nav-links {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form action="{% url 'logout' %}" method="post" class="logout">
+        {% csrf_token %}
+        <button type="submit">Cerrar Sesión</button>
+    </form>
+    
+    <h1>Bienvenido {{ user.username }}</h1>
+    
+    <div class="nav-links">
+        <a href="{% url 'about_me' %}">Acerca de Mí</a> |
+        <a href="{% url 'page_list' %}">Ver Páginas del Blog</a> | 
+        <a href="{% url 'page_new' %}">Crear Nueva Página</a> |
+        <a href="/admin/">Admin</a>
+    </div>
+
+    <main>
+        
+    </main>
+</body>
+</html>

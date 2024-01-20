@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Páginas del Blog</title>
+</head>
+<body>
+    <h1>Páginas del Blog</h1>
+    <ul>
+        {% for page in pages %}
+        <li>
+            <h2>{{ page.title }}</h2>
+            <p>Publicado el: {{ page.post_date }}</p>
+            <a href="{% url 'page_detail' page.id %}">Leer más</a>
+        </li>
+        {% empty %}
+        <li>No hay páginas aún.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
