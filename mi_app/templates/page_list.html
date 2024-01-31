@@ -5,13 +5,20 @@
     <title>Páginas del Blog</title>
 </head>
 <body>
+    
+    <p><a href="{% url 'home' %}">Volver a la Página Principal</a></p>
+
     <h1>Páginas del Blog</h1>
     <ul>
         {% for page in pages %}
         <li>
             <h2>{{ page.title }}</h2>
             <p>Publicado el: {{ page.post_date }}</p>
-            <a href="{% url 'page_detail' page.id %}">Leer más</a>
+            <a href="{% url 'page_detail' page.id %}">Leer más</a> |
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'page_edit' page.id %}">Editar</a> |
+                <a href="{% url 'page_delete' page.id %}">Eliminar</a>
+            {% endif %}
         </li>
         {% empty %}
         <li>No hay páginas aún.</li>

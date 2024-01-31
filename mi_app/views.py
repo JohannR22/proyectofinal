@@ -1,16 +1,10 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Page
-from .forms import PageForm, SignUpForm
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from .forms import PageForm, SignUpForm, CustomLoginForm
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import CustomLoginForm
-from django.views.decorators.http import require_http_methods
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import get_object_or_404
-
-# Create your views here.
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 @login_required
 def home(request):
@@ -20,15 +14,36 @@ def page_list(request):
     pages = Page.objects.all()
     return render(request, 'page_list.html', {'pages': pages})
 
+@login_required
 def page_new(request):
     if request.method == 'POST':
         form = PageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('page_list') 
+            return redirect('page_list')
     else:
         form = PageForm()
     return render(request, 'page_edit.html', {'form': form})
+
+@login_required
+def page_edit(request, pk):
+    page = get_object_or_404(Page, pk=pk)
+    if request.method == 'POST':
+        form = PageForm(request.POST, request.FILES, instance=page)
+        if form.is_valid():
+            form.save()
+            return redirect('page_detail', pk=page.pk)
+    else:
+        form = PageForm(instance=page)
+    return render(request, 'page_edit.html', {'form': form})
+
+@login_required
+def page_delete(request, pk):
+    page = get_object_or_404(Page, pk=pk)
+    if request.method == 'POST':
+        page.delete()
+        return redirect('page_list')
+    return render(request, 'page_confirm_delete.html', {'page': page})
 
 def page_detail(request, pk):
     page = get_object_or_404(Page, pk=pk)
